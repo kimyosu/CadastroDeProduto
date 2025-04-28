@@ -13,9 +13,19 @@ Certifique-se de que o Java está instalado e configurado no seu sistema.
 
 ```bash
 # Compile os arquivos .java
-javac Main.java entities/Produto.java
+javac Main.java entities/Produto.java entities/GerenciadorDeProduto.java
 
 # Execute o programa
 java Main
 
+## Estrutura do Projeto
+```
+.
+└── src
+    ├── entities
+    │   ├── GerenciadorDeProduto.java
+    │   └── Produto.java
+    └── Main.java
+
+```
 
