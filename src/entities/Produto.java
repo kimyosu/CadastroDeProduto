@@ -1,5 +1,7 @@
 package entities;
 
+import java.text.Format;
+
 public class Produto {
     private String nome;
     private int codigo;
@@ -56,7 +58,7 @@ public class Produto {
     public String toString() {
         return "nome do produto: " + nome +
                 "\ncodigo: " + codigo +
-                "\npreço: " + preco +
+                "\npreço: " + String.format("%.2f", preco) +
                 "\nquantidade no estoque: " + quantidadeEstoque;
     }
 }
