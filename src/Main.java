@@ -1,3 +1,5 @@
+import com.sun.tools.attach.AgentInitializationException;
+import entities.GerenciadorDeProduto;
 import entities.Produto;
 
 import java.util.ArrayList;
@@ -11,23 +13,23 @@ public class Main {
         Locale.setDefault(Locale.US);
         scanner.useLocale(Locale.US);
 
-        ArrayList<Produto> produtoArrayList = new ArrayList<>();
+        GerenciadorDeProduto gerenciadorDeProduto = new GerenciadorDeProduto();
+
 
 
         while (true) {
             menu();
             System.out.print("➤");
             int input = scanner.nextInt();
-
             switch (input) {
                 case 1:
-                    cadastrarProduto(scanner, produtoArrayList);
+                    cadastrarProduto(scanner, gerenciadorDeProduto);
                     break;
                 case 2:
-                    listarProdutos(scanner, produtoArrayList);
+                    listarProdutos(scanner, gerenciadorDeProduto);
                     break;
                 case 3:
-                    buscarPorCodigo(scanner, produtoArrayList);
+                    buscarPorCodigo(scanner, gerenciadorDeProduto);
                     break;
 
                 case 4:
@@ -39,61 +41,79 @@ public class Main {
 
     }
 
-    public static void buscarPorCodigo(Scanner scanner, ArrayList<Produto> produtoArrayList) {
 
-        if (produtoArrayList.isEmpty()){
-            System.out.println("não existe produtos cadastrado no banco de dados");
+    public static void cadastrarProduto(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto){
+        scanner.nextLine();
+        System.out.print("Insira o nome do produto: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Insira o código do produto: ");
+        int codigo = scanner.nextInt();
+        boolean verifica = verificarCodigo(codigo, gerenciadorDeProduto);
+
+        /*verifica:
+        * se o codigo ja existe
+        * se o numero é negativo
+        */
+        if (verifica){
             return;
         }
 
+        System.out.print("Insira o preço do produto: ");
+        double preco = scanner.nextDouble();
 
-        System.out.print("insira o codigo do produto que queira buscar: ");
-        int codigo = scanner.nextInt();
+        System.out.print("Insira a quantidade em estoque: ");
+        int quantidade  = scanner.nextInt();
 
-        for (int i = 0; i < produtoArrayList.size(); i++) {
-            if (codigo == produtoArrayList.get(i).getCodigo()){
-                System.out.println(produtoArrayList.get(i).toString());
-                return;
-            }
-        }
-        System.out.println("não foi encontrado o produto");
-        return;
+        gerenciadorDeProduto.cadastrarProduto(nome, codigo, preco, quantidade);
 
+        System.out.println("cadastro feito com sucesso!");
     }
 
+    public static void buscarPorCodigo(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto) {
 
-    public static void cadastrarProduto(Scanner scanner, ArrayList<Produto> produtoArrayList) {
-        scanner.nextLine();
-        System.out.print("insira o nome do produto: ");
-        String nome = scanner.nextLine();
+        //isEmpty -> retorna true caso esteja vazia
+        if (gerenciadorDeProduto.getProdutoArrayList().isEmpty()){  //verifica se a lista esta vazia
+            System.out.println("não existe produtos cadastrados no banco de dados");
+            return;
+        }
+
         System.out.print("insira o codigo do produto: ");
         int codigo = scanner.nextInt();
-        if (!produtoArrayList.isEmpty()) { //caso NÂO esteja vazia
-            for (int i = 0; i < produtoArrayList.size(); i++) {
-                if (produtoArrayList.get(i).getCodigo() == codigo) {
-                    System.out.println("ja existe um produto com esse codigo\ntente novamente.");
-                    return;
-                }
-            }
-        }
-            System.out.print("insira o preço do produto: ");
-            double preco = scanner.nextDouble();
-            System.out.print("insira a quantidade no estoque: ");
-            int quantidadeEstoque = scanner.nextInt();
-            produtoArrayList.add(new Produto(nome, codigo, preco, quantidadeEstoque));
-
+        gerenciadorDeProduto.buscarPorCodigo(codigo);
     }
 
-        public static void listarProdutos(Scanner scanner, ArrayList<Produto> produtoArrayList){
-            if (produtoArrayList.isEmpty()) { //caso esteja vazio{
-                System.out.println("não existe produtos cadastrados");
-                return;
-            }
-            for (int i = 0; i < produtoArrayList.size(); i++) {
-                System.out.println(produtoArrayList.get(i).toString());
+
+
+
+    public static void listarProdutos(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto){
+        gerenciadorDeProduto.listarProdutos();
+    }
+
+    public static boolean verificarCodigo(int codigo, GerenciadorDeProduto gerenciadorDeProduto){
+
+        if (codigo < 0){
+            System.out.println("numero invalido");
+            return true;
+        }
+
+
+        //verificando se o codigo ja existe
+        if (!gerenciadorDeProduto.getProdutoArrayList().isEmpty()) { //caso NÂO esteja vazia
+
+            for (int i = 0; i < gerenciadorDeProduto.getProdutoArrayList().size(); i++) {
+
+                if (gerenciadorDeProduto.getProdutoArrayList().get(i).getCodigo() == codigo) {
+                    System.out.println("ja existe um produto com esse codigo\ntente novamente.");
+                    return true;
+                }
+
             }
 
         }
+        return false;
+    }
+
 
 
         public static void menu(){
