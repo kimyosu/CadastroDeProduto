@@ -13,7 +13,7 @@ Certifique-se de que o Java está instalado e configurado no seu sistema.
 
 ```bash
 # Compile os arquivos .java
-javac Main.java entities/Produto.java entities/GerenciadorDeProduto.java
+javac Main.java model/entities/Produto.java model/entities/GerenciadorDeProduto.java
 
 # Execute o programa
 java Main
@@ -24,7 +24,8 @@ java Main
 ```
 .
 └── src
-    ├── entities
+    ├──model   
+    │   ├── entities
     │   ├── GerenciadorDeProduto.java
     │   └── Produto.java
     └── Main.java
