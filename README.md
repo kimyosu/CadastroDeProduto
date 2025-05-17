@@ -23,10 +23,14 @@ java Main
 
 ```
 .
-└── src
-    ├──model   
-    │   ├── entities
-    │   ├── GerenciadorDeProduto.java
-    │   └── Produto.java
-    └── Main.java
+├── Main.java
+└── model
+    ├── entities
+    │   ├── GerenciadorDeProduto.java
+    │   └── Produto.java
+    └── exceptions
+        ├── CodeExist.java
+        ├── NameExist.java
+        ├── ProductNoExist.java
+        └── ValueBelowZero.java
 ```
