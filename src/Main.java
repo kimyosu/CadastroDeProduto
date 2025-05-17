@@ -54,7 +54,7 @@ public class Main {
                    gerenciadorDeProduto.verificarCodigo(codigo);
 
                    System.out.print("Preço do produto: ");
-                   double preco = scanner.nextInt();
+                   double preco = scanner.nextDouble();
                    gerenciadorDeProduto.verificarPreco(preco);
 
                    System.out.print("Quantidade no estoque: ");
