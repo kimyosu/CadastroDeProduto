@@ -1,8 +1,10 @@
-import com.sun.tools.attach.AgentInitializationException;
-import entities.GerenciadorDeProduto;
-import entities.Produto;
+import model.entities.GerenciadorDeProduto;
+import model.exceptions.CodeExist;
+import model.exceptions.NameExist;
+import model.exceptions.ProductNoExist;
+import model.exceptions.ValueBelowZero;
 
-import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -15,8 +17,6 @@ public class Main {
 
         GerenciadorDeProduto gerenciadorDeProduto = new GerenciadorDeProduto();
 
-
-
         while (true) {
             menu();
             System.out.print("➤");
@@ -26,10 +26,10 @@ public class Main {
                     cadastrarProduto(scanner, gerenciadorDeProduto);
                     break;
                 case 2:
-                    listarProdutos(scanner, gerenciadorDeProduto);
+                    listarProdutos(gerenciadorDeProduto);
                     break;
                 case 3:
-                    buscarPorCodigo(scanner, gerenciadorDeProduto);
+                    buscarProdutoPorCodigo(scanner, gerenciadorDeProduto);
                     break;
 
                 case 4:
@@ -42,84 +42,62 @@ public class Main {
     }
 
 
-    public static void cadastrarProduto(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto){
-        scanner.nextLine();
-        System.out.print("Insira o nome do produto: ");
-        String nome = scanner.nextLine();
+        public static void cadastrarProduto(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto){
+               try{
+                   scanner.nextLine();
+                   System.out.print("Nome do produto: ");
+                   String nome = scanner.nextLine();
+                   gerenciadorDeProduto.verificarNome(nome);
 
-        System.out.print("Insira o código do produto: ");
-        int codigo = scanner.nextInt();
-        boolean verifica = verificarCodigo(codigo, gerenciadorDeProduto);
+                   System.out.print("Codigo do produto: ");
+                   int codigo = scanner.nextInt();
+                   gerenciadorDeProduto.verificarCodigo(codigo);
 
-        /*verifica:
-        * se o codigo ja existe
-        * se o numero é negativo
-        */
-        if (verifica){
-            return;
+                   System.out.print("Preço do produto: ");
+                   double preco = scanner.nextInt();
+                   gerenciadorDeProduto.verificarPreco(preco);
+
+                   System.out.print("Quantidade no estoque: ");
+                   int quantidadeEstoque = scanner.nextInt();
+
+                   gerenciadorDeProduto.cadastrarProduto(nome, codigo, preco, quantidadeEstoque);
+                   System.out.println("Produto criado com sucesso!");
+
+               }catch (CodeExist | NameExist | ValueBelowZero e){
+                   System.out.println(e.getMessage());
+               } catch (InputMismatchException e){
+                   System.out.println("erro: " + e.getMessage());
+               }
         }
 
-        System.out.print("Insira o preço do produto: ");
-        double preco = scanner.nextDouble();
-
-        System.out.print("Insira a quantidade em estoque: ");
-        int quantidade  = scanner.nextInt();
-
-        gerenciadorDeProduto.cadastrarProduto(nome, codigo, preco, quantidade);
-
-        System.out.println("cadastro feito com sucesso!");
-    }
-
-    public static void buscarPorCodigo(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto) {
-
-        //isEmpty -> retorna true caso esteja vazia
-        if (gerenciadorDeProduto.getProdutoArrayList().isEmpty()){  //verifica se a lista esta vazia
-            System.out.println("não existe produtos cadastrados no banco de dados");
-            return;
+        public static void listarProdutos(GerenciadorDeProduto gerenciadorDeProduto){
+            try {
+                gerenciadorDeProduto.listarProdutos();
+            }catch (ProductNoExist e){
+                System.out.println(e.getMessage());
+            }
         }
 
-        System.out.print("insira o codigo do produto: ");
-        int codigo = scanner.nextInt();
-        gerenciadorDeProduto.buscarPorCodigo(codigo);
-    }
-
-
-
-
-    public static void listarProdutos(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto){
-        gerenciadorDeProduto.listarProdutos();
-    }
-
-    public static boolean verificarCodigo(int codigo, GerenciadorDeProduto gerenciadorDeProduto){
-
-        if (codigo < 0){
-            System.out.println("numero invalido");
-            return true;
-        }
-
-
-        //verificando se o codigo ja existe
-        if (!gerenciadorDeProduto.getProdutoArrayList().isEmpty()) { //caso NÂO esteja vazia
-
-            for (int i = 0; i < gerenciadorDeProduto.getProdutoArrayList().size(); i++) {
-
-                if (gerenciadorDeProduto.getProdutoArrayList().get(i).getCodigo() == codigo) {
-                    System.out.println("ja existe um produto com esse codigo\ntente novamente.");
-                    return true;
-                }
-
+        public static void buscarProdutoPorCodigo(Scanner scanner, GerenciadorDeProduto gerenciadorDeProduto){
+            try {
+                gerenciadorDeProduto.verificaLista();
+                System.out.print("Insira o codigo do produto que deseja buscar: ");
+                int codigo = scanner.nextInt();
+                gerenciadorDeProduto.buscarPorCodigo(codigo);
+            }catch (ProductNoExist e){
+                System.out.println(e.getMessage());
+            }catch (InputMismatchException e){
+                System.out.println("error: " + e.getMessage());
             }
 
+
         }
-        return false;
-    }
-
-
 
         public static void menu(){
-            System.out.println("1-Cadastrar um novo produto\n" +
-                    "2-Listar todos os produtos cadastrados\n" +
-                    "3-Buscar um produto pelo código\n" +
-                    "4-Sair do programa");
+            System.out.println("""
+                    1-Cadastrar um novo produto
+                    2-Listar todos os produtos cadastrados
+                    3-Buscar um produto pelo código
+                    4-Sair do programa""");
         }
     }
