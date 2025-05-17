@@ -28,8 +28,6 @@ public class GerenciadorDeProduto {
     //Verifica se o nome já existe na lista
     public void verificarNome(String nome){
 
-        verificaLista();
-
         for (int i = 0; i < produtoArrayList.size(); i++){
             if (produtoArrayList.get(i).getNome().equals(nome)){
                 throw new NameExist("Esse nome já existe no banco de dados");
@@ -40,7 +38,6 @@ public class GerenciadorDeProduto {
     //Verifica se o codigo já existe na list
     public  void verificarCodigo(int codigo){
 
-        verificaLista();
 
         for (int i = 0; i < produtoArrayList.size(); i++){
             if (produtoArrayList.get(i).getCodigo() == codigo){
