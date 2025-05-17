@@ -22,7 +22,7 @@ java Main
 ## Estrutura do Projeto
 
 ```
-.
+src
 ├── Main.java
 └── model
     ├── entities
@@ -33,4 +33,5 @@ java Main
         ├── NameExist.java
         ├── ProductNoExist.java
         └── ValueBelowZero.java
+
 ```
