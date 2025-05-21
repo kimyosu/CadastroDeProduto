@@ -1,3 +1,5 @@
+package application;
+
 import model.entities.GerenciadorDeProduto;
 import model.exceptions.CodeExist;
 import model.exceptions.NameExist;
