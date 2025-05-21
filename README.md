@@ -10,20 +10,21 @@ Esse programa tem como objetivo simples um cadastro de produtos, podendo:
 ## Como Rodar
 Clone o repositório e navegue até a pasta "src".  
 Certifique-se de que o Java está instalado e configurado no seu sistema.
-
 ```bash
-# Compile os arquivos .java
-javac Main.java model/entities/Produto.java model/entities/GerenciadorDeProduto.java
+# Compile tudo de uma vez
+javac -d out $(find . -name "*.java")
 
 # Execute o programa
-java Main
+cd out
+java application.Main
 ```
 
 ## Estrutura do Projeto
 
 ```
 src
-├── Main.java
+├── application
+│   └── Main.java
 └── model
     ├── entities
     │   ├── GerenciadorDeProduto.java
@@ -33,5 +34,4 @@ src
         ├── NameExist.java
         ├── ProductNoExist.java
         └── ValueBelowZero.java
-
 ```
